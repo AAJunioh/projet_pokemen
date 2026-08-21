@@ -6,6 +6,7 @@ const POKEMON_COUNT = 15
 function PokemonList() {
   const [pokemons, setPokemons] = useState([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     async function fetchPokemons() {
@@ -26,16 +27,31 @@ function PokemonList() {
     fetchPokemons()
   }, [])
 
+  const filteredPokemons = pokemons.filter((pokemon) =>
+    pokemon.name.toLowerCase().includes(search.toLowerCase())
+  )
+
   if (loading) {
     return <p className="status">Chargement des Pokémon...</p>
   }
 
   return (
-    <div className="pokemon-grid">
-      {pokemons.map((pokemon) => (
-        <PokemonCard key={pokemon.id} pokemon={pokemon} />
-      ))}
-    </div>
+    <>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="🔎 Rechercher un Pokémon..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className="pokemon-grid">
+        {filteredPokemons.map((pokemon) => (
+          <PokemonCard key={pokemon.id} pokemon={pokemon} />
+        ))}
+      </div>
+    </>
   )
 }
 
